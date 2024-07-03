@@ -1,0 +1,179 @@
+---
+title: "Multinomial modeling"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(mclogit)
+library(tidyverse)
+
+```
+
+## Multinomial regression overview
+
+The general idea of multinomial regression modeling is to break the problem down into multiple logistic regression problems. So, instead of comparing the probability of "success" to the probability of "failure" (the odds of success), we select a baseline category and compare the probability of being in any other category to the probability of being in the baseline category. It is conventional to choose the "last" or the "first" category as the baseline, though it's completely arbitrary since with nominal data the categories can't be ordered in any logical manner. The `mclogit` package chooses the first category as the baseline.
+
+Say we have $J$ categories. Then, we will have $J-1$ generalized regression equations that amount to something like
+
+$$
+\eta_{ij} = {\bf x}_{i}^\top {\boldsymbol \beta},
+$$
+
+where ${\bf x}_{i}$ is a vector of covariates for the $i^\text{th}$ observation and $\boldsymbol \beta$ is the vector of regression coefficients. It is then necessary to fix $\eta_{i1} = 0$ for the baseline category in order for the probabilities of each category, $p_{i1}, p_{i2}, ... ,p_{iJ}$, to sum to one. This comes from the fact that we are defining $\eta_{ij} := \log(p_{ij}/p_{i1})$, or the log-odds of category $j$ relative to category 1, the baseline.  Then, we have that the probability that observation $i$ falls into category $j$ is
+
+$$
+p_{ij} = \frac{\exp\{\eta_{ij}\}}{\sum_{k=1}^J \exp\{\eta_{ik}\}}
+$$
+
+and
+
+$$
+p_{iJ} = \frac{1}{\sum_{k=1}^J\exp\{\eta_{ik}\}}.
+$$
+
+In the case of estimating probabilities using nested data, the model will look something like (depending on how many nested levels you have)
+$$
+\eta_{ikj} = \alpha_j + u_{k} + \epsilon_{i(k)}
+$$
+
+where $u_1,u_2,...,u_K \overset{iid}{\sim} \mathcal{N}(0, \sigma_u^2)$ are random effects for the block and $\epsilon_{1(k)}, \epsilon_{2(k)}, ..., \epsilon_{n(k)} \overset{iid}{\sim} \mathcal{N}(0, \sigma_\epsilon^2)$ are random effects for the plot nested within block (or whatever terminology you are using).
+
+
+### Example data
+
+```{r}
+
+# say we have 10 plots with 20 quadrats each and 4 categories with counts of 4 
+# in each plot, we have slightly different probabilities of being in each category
+# we only define 3 means since the final is determined by the rest
+  K <- 20 # number of quadrats
+  P <- 10 # number of plots
+  
+  alphas <- c(1, -2, 0.5)
+  us <- rnorm(P, sd = 0.5)
+  
+  etas <- cbind(
+    rep(0, K * P),
+    alphas[1] + rep(us, each = K),
+    alphas[2] + rep(us, each = K),
+    alphas[3] + rep(us, each = K)
+  )
+
+# define the logistic function
+  compute_p <- function(eta){
+    # denominator from above
+    sum_exp <- sum(exp(eta))
+    # compute vector of probabilities
+    p <- exp(eta)/sum_exp
+  }
+  
+# now compute matrix of probs
+  pmat <- t(apply(etas, 1, compute_p))
+  
+# you can check that all rows sum to one
+  apply(pmat, 1, sum)
+  
+# now simulate our data
+  dat <- purrr::map(
+    1:nrow(pmat),
+    ~ rmultinom(1, size = 4, prob = pmat[.x, ])
+  )
+  
+# simplify
+  dat_df <- as.data.frame(
+    matrix(unlist(dat), byrow = T, ncol = 4)
+  )
+  
+# add some house-keeping info
+  dat_df <- dat_df %>% mutate(
+    plot = rep(1:P, each = K),
+    quadrat = rep(1:K, P)
+  )
+  
+  head(dat_df, 15)
+
+```
+
+
+Now we have a matrix of counts for each quadrat within each plot for each category, 1-4. 
+
+### Fit the model
+
+```{r}
+
+# convert plot and quadrat to factors
+  dat_df$plot <- as.factor(dat_df$plot)
+  dat_df$quadrat <- as.factor(dat_df$quadrat)
+
+# make response matrix
+  y_mat <- as.matrix(dat_df[, 1:4])
+  
+# fit a model accounting for potential correlation among observations
+#  in the same plot
+  mfit <- mblogit(y_mat ~ 1, random = ~ 1 | plot, data = dat_df)
+  
+  summary(mfit)
+
+```
+
+
+The intercepts should match (roughly) what we defined for the alphas, with $\alpha_1$ constrained to zero. To get back to the estimates of the probabilities, we need the equations from above. For example:
+
+$$
+\hat p_{j} = \frac{\exp\{\hat\alpha_j\}}{1 + \sum_{j=2}^J \exp\{\hat\alpha_j\}}
+$$
+
+is the overall estimate for the probability of being in category $j$ (i.e., not conditioning on a given plot, but averaging over plots).
+
+### Testing for a difference between groups
+
+#### Wald tests
+
+In theory, there are a few different tests one could run for tests between groups. Unfortunately, the `mclogit` package uses *quasi-likelihood* methods to estimate parameters when random effects are included, so likelihood ratio tests are not an option in this situation since there is no well-defined likelihood function. Probably the easiest alternative is a Wald test which is what's provided in the summary of the model fit object and is asymptotically equivalent to the LR test. From the model summary, we get a $p$-value for the test of the null that any given category has equal probability to the baseline category. These are the $p$-values provided in the model output. To test for differences between other categories, for example 2 and 3:
+
+$$
+\begin{aligned}
+\eta_{2k} - \eta_{3k} &= (\alpha_2 + u_k) - (\alpha_3 + u_k)\\
+& = \alpha_2 - \alpha_3\\
+&= \log(p_2/p_1) - \log(p_3/p_1)\\
+&= \log \left(\frac{p_2/p_1}{p_3/p_1} \right)\\
+& = \log(p_2/p_3)
+\end{aligned}
+$$
+
+or the log-odds of being in category 2 relative to 3 given we are in plot $k$ (but regardless of which plot we choose, the contrast should be the same). So, a Wald test statistic would be $(\alpha_2 - \alpha_3)/SE$ which is asymptotically normally distributed and tests whether the odds of being in category 2 versus 3 is different from 1. The Wald statistic can be calculated as
+
+$$
+z_w = \frac{{\bf c}^\top \hat{\boldsymbol \alpha}}{\sqrt{{\bf c}^\top {\bf V} {\bf c}}} = \frac{\hat\alpha_2 - \hat\alpha_3}{\sqrt{{\bf c}^\top {\bf V} {\bf c}}},
+$$
+
+where ${\bf c} = (1, -1, 0)^\top$ is a vector used to contrast the second and third intercepts (remember that the first intercept isn't included in the output because it is fixed to zero), and $\bf V$ is the estimated covariance matrix of the vector of alphas. This statistic can be compared to a standard normal quantile to get a $p$-value.
+
+```{r}
+
+# wald test for 2 compared to 3
+
+# extract covariance matrix
+  V <- vcov(mfit)
+
+# define the contrast vector
+  c_vec <- c(1, -1, 0)
+  
+# compute the z-stat
+  z <- c_vec %*% coefficients(mfit)/
+    sqrt(c_vec %*% V %*% c_vec)
+  
+# p-value
+  pnorm(abs(z), lower.tail = F)
+
+```
+
+This same idea can be extended to more complex hypotheses as well. For example, say we want to test the hypothesis that the probability of being in category 2 is greater than the probability of being in categories 3 and 4 combined. We could define ${\bf c} := (1,\ -1,\ -1)^\top$ such that the term in the numerator is ${\bf c}^\top \hat{\boldsymbol \alpha} = (\hat \alpha_2 - \hat \alpha_3 - \hat \alpha_4)$, which, under the null, has an expected value of zero (note that this is not technically a contrast anymore since the sum of the contrast coefficients must be equal to 0).
+
+
+
+
+
+
