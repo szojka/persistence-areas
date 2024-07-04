@@ -142,7 +142,7 @@ Precipitation : in cm
 
 # SUPPORTING INFORMATION AND CONTACT:
 
-1. code DOI:
+1. code DOI: 10.5281/zenodo.12645034
 
 2. although not required, the authors would appreciate if you would notify author Megan Szojka mszojka@uwyo.edu if you are planning on using this data in a project for publication, as other projects are ongoing.
 
