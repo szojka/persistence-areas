@@ -19,7 +19,7 @@
 # library(visreg)
 # library(Rmisc)
 # library(patchwork)
-# library(rgeos)
+# library(sf)
 
 source(paste0(here::here(),"/Scripts/Stats - misalignments by treatment at blocks.R"))
 source(paste0(here::here(),"/Scripts/Stats - misalignments by treatment at grids.R"))
@@ -177,11 +177,30 @@ tab_neighbor_estimates |>
 
 anovas <- rbind(plot.anova, grid.anova, site.anova)
 
+# get the order and names of misalignments correct:
+anovas$contingency <- as.factor(anovas$contingency)
+levels(anovas$contingency)
+
+anovas$contingency <- case_match(anovas$contingency,
+                                     'aligned present' ~ 'i. aligned present',
+                                     'sink' ~ 'ii. sink',
+                                     'sinks' ~ 'ii. sink',
+                                     'dispersal limitation' ~ 'iii. dispersal limitation',
+                                     'aligned absent' ~ 'iv. aligned absent')
+
+# order plot -> site
+anovas$scale <- factor(anovas$scale, levels = c(
+  "plot", "grid", "site"), ordered = TRUE) 
+levels(anovas$scale)
+
+anovas <- anovas %>%
+ arrange(scale, contingency)
+
 tab_anovas <- anovas |>
   dplyr::select(scale, contingency, predictor, Chi.squared, Df, P_value) |>
   gt() |>
   tab_header( title = "",
-              subtitle = "Table S7. ANOVA outputs of predictor 'Data type', which represents the neighbor treatment predictor with two levels: with neighbors, without neighbors. Separate models were fit for each scale and (mis)alignment category.")  |>
+              subtitle = "Table S7. ANOVA outputs of predictor 'Data type', which represents the neighbor treatment predictor with two levels: with neighbors, without neighbors. Separate models were fit for each scale and (mis)alignment category. NAs indicate there were no instances in our data, thus comparisons are not possible.")  |>
   opt_align_table_header(align = "left") |>
   cols_label(
     predictor = 'Predictor',
@@ -202,6 +221,24 @@ tab_anovas |>
 
 contrastz <- rbind(plot.contrast, grid.contrast, site.contrast)
 
+# get the order and names of misalignments correct:
+contrastz$contingency <- as.factor(contrastz$contingency)
+levels(contrastz$contingency)
+
+contrastz$contingency <- case_match(contrastz$contingency,
+                                 'aligned present' ~ 'i. aligned present',
+                                 'sink' ~ 'ii. sink',
+                                 'dispersal limitation' ~ 'iii. dispersal limitation',
+                                 'aligned absent' ~ 'iv. aligned absent')
+
+# order plot -> site
+contrastz$scale <- factor(contrastz$scale, levels = c(
+  "plot", "grid", "site"), ordered = TRUE) 
+levels(contrastz$scale)
+
+contrastz <- contrastz %>%
+  arrange(scale, contingency)
+
 tab_contrasts <- contrastz |>
   dplyr::select(scale, contingency, z.ratio, p.value) |>
  # dplyr::mutate(odds.ratio = round(odds.ratio,3)) |>
@@ -209,7 +246,7 @@ tab_contrasts <- contrastz |>
   dplyr::mutate(p.value = round(p.value,3)) |>
   gt() |>
   tab_header( title = "",
-              subtitle = "Table S8. Contrasts between 'without neighbors' and 'with neighbors' treatment levels within each scale and (mis)alignment category.")  |>
+              subtitle = "Table S8. Contrasts between 'without neighbors' and 'with neighbors' treatment levels within each scale and (mis)alignment category. NAs indicate there were no instances in our data, thus comparisons are not possible.")  |>
   opt_align_table_header(align = "left") |>
   cols_label(
     z.ratio = "z-ratio",

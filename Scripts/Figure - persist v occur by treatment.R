@@ -19,7 +19,7 @@
 # library(visreg)
 # library(Rmisc)
 # library(patchwork)
-# library(rgeos)
+# library(sf)
 
 # source("Scripts/Source - MAIN fitnessdata.R") # loaded in following script:
 source("Scripts/Stats - persistence & occurrence by treatment across discrete scales.R")

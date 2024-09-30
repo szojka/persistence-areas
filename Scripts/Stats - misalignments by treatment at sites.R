@@ -20,7 +20,7 @@
 # library(visreg)
 # library(Rmisc)
 # library(patchwork)
-# library(rgeos)
+# library(sf)
 # library(mclogit)
 # library(emmeans)
 
@@ -184,13 +184,13 @@ site.ap.contrast <- pairs(em)
 
 vis.me.r <- ggpredict(m.me.r, 
                       terms = c("treatment"), 
-                      type = "fe", allow.new.levels=TRUE)
+                      type = "fe")
 vis.me.r$contingency <- c("ME")
 vis.me.r$scale <- c("site")
 
 vis.ap.r <- ggpredict(m.ap.r, 
                       terms = c("treatment"), 
-                      type = "fe", allow.new.levels=TRUE)
+                      type = "fe")
 vis.ap.r$contingency <- c("SS_y")
 vis.ap.r$scale <- c("site")
 

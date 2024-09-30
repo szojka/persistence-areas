@@ -3,12 +3,6 @@
 # FIGURE 1d - MISALIGNMENTS IN NATURAL CONDITIONS (WITH BIOTIC INTERACTIONS)
 #----------------------------------------------------------------------------
 {
-  # Inkscape changes 
-  #keep green, 
-  #balance size of data and conceptual would help if data was more square, 
-  #tubes make small lip, 
-  #arrows need to be more obvious---maybe making boxes the same color as data type--add an occurrence plant on one side,  
-  
   ###############################
   # Load packages and functions
   ###############################
@@ -24,7 +18,7 @@
   # library(visreg)
   # library(Rmisc)
   # library(patchwork)
-  # library(rgeos)
+  # library(sf)
   library(here)
   
  # source(paste0(here::here(), "/Scripts/Stats - natural persistence v occurrence.R")) defunct
@@ -52,6 +46,7 @@ dat_fig$treatment <- case_match(dat_fig$treatment, # make the name fit
                                 "suitability with neighbors" ~ "suitability \n with neighbors",
                                 "occupancy"~ "occupancy")
 summary$scale <- as.factor(summary$scale)
+names(summary)[1] <- "treatment"
 dat_mod <- summary %>%
   dplyr::filter(treatment %in% c("occupancy","suitability with neighbors" ) &
                   scale %in% "plot")
@@ -62,8 +57,8 @@ dat_mod$treatment <- case_match(dat_mod$treatment, # make the name fit
 figa <- ggplot() + # should be prop for raw data
   geom_jitter(data = dat_fig, aes(x = treatment, y = prop), color = "deepskyblue4", alpha = 0.1, size = 1, width = 0.2, height = 0.03) + 
   theme_bw() +
-  geom_point(data = dat_mod, aes(x = treatment, y = prop), color = "deepskyblue4", size = 4) +
-  geom_linerange(data = dat_mod, aes(x = treatment, y = prop, ymin = conf.low, ymax = conf.high), color = "deepskyblue4", linewidth = 1)+
+  geom_point(data = dat_mod, aes(x = treatment, y = predicted), color = "deepskyblue4", size = 4) +
+  geom_linerange(data = dat_mod, aes(x = treatment, y = predicted, ymin = conf.low, ymax = conf.high), color = "deepskyblue4", linewidth = 1)+
   theme(text = element_text(size = 16),
         legend.position = 'none',
         axis.text.x = element_text (angle = 45, vjust = 1, hjust=1)) +
@@ -157,7 +152,7 @@ tab_mulinomial_estimates <- output1 |>
   dplyr::select(contingency, prob, conf.int) |>
   gt() |>
   tab_header( title = "",
-              subtitle = "Table S1. Estimated proportion from the multinomial model of each (mis)alignment in natural conditions (i.e., with neighbors) and at the plot scale.")  |>
+              subtitle = "Table S1. Estimated proportion from the multinomial model of each (mis)alignment in natural conditions (i.e., with neighbors) and at the plot scale. Roman numerals correspond to (mis)alignments in Figure 1.")  |>
   opt_align_table_header(align = "left") |>
   cols_label(
     contingency = "(Mis)alignment",

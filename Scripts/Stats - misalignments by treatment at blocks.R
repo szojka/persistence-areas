@@ -21,7 +21,7 @@
 # library(visreg)
 # library(Rmisc)
 # library(patchwork)
-# library(rgeos)
+# library(sf)
 # library(mclogit)
 # library(emmeans)
 
@@ -279,25 +279,25 @@ plot.aa.contrast <- pairs(em)
 
 vis.me.p <- ggpredict(m.me.p, 
                       terms = c("treatment"), 
-                      type = "fe", allow.new.levels=TRUE)
+                      type = "fe")
 vis.me.p$contingency <- c("ME")
 vis.me.p$scale <- c("plot")
 
 vis.ap.p <- ggpredict(m.ap.p, 
                       terms = c("treatment"), 
-                      type = "fe", allow.new.levels=TRUE)
+                      type = "fe")
 vis.ap.p$contingency <- c("SS_y")
 vis.ap.p$scale <- c("plot")
 
 vis.dl.p <- ggpredict(m.dl.p, 
                       terms = c("treatment"), 
-                      type = "fe", allow.new.levels=TRUE)
+                      type = "fe")
 vis.dl.p$contingency <- c("DL")
 vis.dl.p$scale <- c("plot")
 
 vis.aa.p <- ggpredict(m.aa.p, 
                       terms = c("treatment"), 
-                      type = "fe", allow.new.levels=TRUE)
+                      type = "fe")
 vis.aa.p$contingency <- c("SS_n")
 vis.aa.p$scale <- c("plot")
 

@@ -19,7 +19,7 @@
 # library(visreg)
 # library(Rmisc)
 # library(patchwork)
-# library(rgeos)
+# library(sf)
 
 source("Scripts/Source - MAIN fitnessdata.R")
 
@@ -99,7 +99,7 @@ source("Scripts/Source - MAIN fitnessdata.R")
                                      "B" ~ "suitability with neighbors", 
                                      "O" ~ "occupancy", 
                                      .default = fig_fig_2A$treatment)
-  
+  fig_fig_2A$treatment <- as.factor(fig_fig_2A$treatment)
 }
 
 ########################
@@ -119,7 +119,7 @@ mplot <- glmmTMB::glmmTMB(prop ~ treatment + (1|names) + (1|site) + (1|site:grid
 
 vis.p <- ggpredict(mplot, 
                    terms = c("treatment"), 
-                   type = "fe", allow.new.levels=TRUE)
+                   type = "fe")
 
 vis.p$scale <- c("plot")
 
@@ -221,7 +221,7 @@ pairs(em)
                                      "B" ~ "suitability with neighbors", 
                                      "O" ~ "occupancy", 
                                      .default = fig_fig_2C$treatment)
-  
+  fig_fig_2C$treatment <- as.factor(fig_fig_2C$treatment)
 }
 
 
@@ -242,7 +242,7 @@ gplot <- glmmTMB::glmmTMB(prop ~ treatment + (1|site) + (1|site:grid),
 
 vis.g <- ggpredict(gplot, 
                    terms = c("treatment"), 
-                   type = "fe", allow.new.levels=TRUE)
+                   type = "fe")
 
 vis.g$scale <- c("grid")
 
@@ -343,6 +343,7 @@ pairs(em)
                                      "B" ~ "suitability with neighbors", 
                                      "O" ~ "occupancy", 
                                      .default = fig_fig_2E$treatment)
+  fig_fig_2E$treatment <- as.factor(fig_fig_2E$treatment)
 }
 
 ########################
@@ -362,7 +363,7 @@ splot <- glmmTMB::glmmTMB(prop ~ treatment + (1|site),
 
 vis.s <- ggpredict(splot, 
                    terms = c("treatment"), 
-                   type = "fe", allow.new.levels=TRUE)
+                   type = "fe")
 
 vis.s$scale <- c("site")
 
@@ -382,9 +383,9 @@ s.anova <- data.frame(Chi.squared = round(c(a$Chisq[1],a$Chisq[2]),3),
 em <- emmeans(splot, ~treatment, type = "response") # specify green_index_scaled values
 em
 # treatment  prob     SE  df asymp.LCL asymp.UCL
-# occurrence                    1.0000000 0.00000184 Inf 0.0000000 1.0000000
-# suitability with neighbors    0.1666667 0.07607257 Inf 0.0639867 0.3691369
-# suitability without neighbors 0.5833333 0.10063459 Inf 0.3834264 0.7591408
+# occupancy                     1.0000000 0.00000100 Inf 0.0000000 1.0000000
+# suitability with neighbors    0.1266956 0.08676698 Inf 0.0302512 0.4028771
+# suitability without neighbors 0.5984287 0.15084730 Inf 0.3033541 0.8360629
 
 splot.contrast <- as.data.frame(pairs(em))
 pairs(em)

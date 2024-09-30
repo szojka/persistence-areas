@@ -18,7 +18,7 @@ library(glmmTMB)
 library(visreg)
 library(Rmisc)
 library(patchwork)
-library(rgeos)
+library(sf)
 library(ggeffects)
 library(DHARMa)
 library(gt)
@@ -74,16 +74,19 @@ max(utm$utm_y) #4302411
 min(utm$utm_y) #4297447
 
 # find distances between my plot points in "utm" and each other (so that I always start a run on a data point)
-library(rgeos)
 nrun <- 450
 utm2 <- sp::SpatialPoints(utm2)
-x <- gDistance(utm2,utm2,byid=T)
 
-# distance dataset
-names <- c(utm$name)# create vector of names from utm
+# convert data to an sf object
+utm2_sf <- st_as_sf(utm2, coords = c("UTM_x", "UTM_y"), crs = 32633) # Replace with the correct column names and CRS
 
-#dist.dat = as.data.frame(t(x))
-dist.dat = as.data.frame(x)
+# calculate distances between each point
+x <- st_distance(utm2_sf)
+
+# create a distance dataset
+names <- c(utm2_sf$name) # Assuming 'name' is a column in your sf object
+
+dist.dat <- as.data.frame(x)
 
 # Should retain order such that unique key (names) is maintained for each group
 

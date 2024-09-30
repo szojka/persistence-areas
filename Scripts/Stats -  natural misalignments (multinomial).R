@@ -18,7 +18,7 @@
 # library(visreg)
 # library(Rmisc)
 # library(patchwork)
-# library(rgeos)
+# library(sf)
 # library(mclogit)
 
 source("Scripts/Source - MAIN fitnessdata.R")
