@@ -115,8 +115,8 @@ fig_seed_zoomed <- ggplot(seed_dat_germ, aes(x = seed, fill = treatment, color =
   )
 fig_seed_zoomed
 
-jpeg('Figures/supp_fig_seedprod_zoomed.jpeg', width = 8.5, height = 7, units = 'in', res = 600)
-fig_seed
+jpeg('Figures/supp_fig_seedprod_zoomed.jpeg', width = 7, height = 6, units = 'in', res = 600)
+fig_seed_zoomed
 dev.off()
 
 
@@ -130,7 +130,12 @@ dev.off()
 seed_dat_germ %>%
   dplyr::group_by(species, treatment) %>%
   dplyr::mutate(max_seed = max(seed)) %>%
-  dplyr::select(species, treatment, max_seed) %>%
+  dplyr::mutate(mean_seed = mean(seed)) %>%
+  dplyr::mutate(sd_seed = sd(seed)) %>%
+  dplyr::mutate(n_seed = n()) %>%
+  dplyr::mutate(lower_ci_seed = mean_seed-1.96*(sd_seed/sqrt(n_seed))) %>%
+  dplyr::mutate(upper_ci_seed = mean_seed+1.96*(sd_seed/sqrt(n_seed))) %>%
+  dplyr::select(species, treatment, max_seed, mean_seed, lower_ci_seed, upper_ci_seed) %>%
   distinct()
 # species  treatment         max_seed
 # 1 Plantago with neighbors          52
@@ -144,3 +149,12 @@ seed_dat_germ %>%
 
 # 7 Festuca  without neighbors       82*
 # 8 Festuca  with neighbors          36
+
+################################################
+# overall mean seed production (not by species)
+seed_dat_germ %>%
+  dplyr::group_by(treatment) %>%
+  dplyr::mutate(max_seed = max(seed)) %>%
+  dplyr::mutate(mean_seed = mean(seed)) %>%
+  dplyr::select(treatment, max_seed, mean_seed) %>%
+  distinct()
