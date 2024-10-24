@@ -722,25 +722,3 @@ tab_mulinomial_estimates <- output_ordered |>
     columns = where(is.factor))
 tab_mulinomial_estimates |>
   gtsave(paste0(here::here(),"/Tables/15tab_multinomial_estimates.pdf")) 
-
-# FIXME do we want to add wald tests?
-# tab_wald <- dat_compare |>
-#   dplyr::mutate(z_score = round(z_score,4)) |>
-#   gt() |>
-#   tab_header( title = "",
-#               subtitle = "Table 16. Pairwise contrasts between each (mis)alignment levels at the plot scale in natural conditions (i.e. with neighbors). Contrasts are outputs from WALD tests on the multinomial model for each species.")  |>
-#   opt_align_table_header(align = "left") |>
-#   cols_label(
-#     p_val = "P-value",
-#     comparing = 'Pairwise comparison',
-#     z_score = "z-score") |>
-#   cols_align(
-#     align = 'right', 
-#     columns = where(is.numeric)) |> 
-#   cols_align(
-#     align = 'left', 
-#     columns = where(is.factor))
-# 
-# tab_wald |>
-#   gtsave(paste0(here::here(),"/Tables/16tab_wald.pdf")) 
-

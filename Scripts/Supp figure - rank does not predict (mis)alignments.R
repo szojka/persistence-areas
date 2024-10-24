@@ -34,9 +34,9 @@ fig1_ab <- plotlev %>%
 fig1P_dat$species <- 'plaere'
 fig1V_dat$species <- 'vulmic'
 fig1M_dat$species <- 'miccal'
-fig1B_dat$species <- 'brohor'
-fig1B_dat <- select(fig1B_dat, -replicates)
-spp_prop_dat <- rbind(fig1P_dat,fig1V_dat,fig1M_dat,fig1B_dat)
+fig1Br_dat$species <- 'brohor'
+#fig1Br_dat <- select(fig1Br_dat, -replicates)
+spp_prop_dat <- rbind(fig1P_dat,fig1V_dat,fig1M_dat,fig1Br_dat)
 spp_prop_dat$species <- as.factor(spp_prop_dat$species)
 
 # link together plotlev and proportion of contingencies for each species
@@ -76,7 +76,7 @@ vis_mr1$group <- case_match(vis_mr1$group, #contingency
                             "ME" ~ "Sink",
                             "DL" ~ "Dispersal limitation",
                             "SS_n" ~ "Aligned absent")
-vis_dd$group <- factor(vis_dd$group, levels = c("Aligned present", "Sink","Dispersal limitation", "Aligned absent"))
+vis_mr1$group <- factor(vis_mr1$group, levels = c("Aligned present", "Sink","Dispersal limitation", "Aligned absent"))
 
 library(viridis)
 
@@ -98,92 +98,3 @@ jpeg('Figures/fig_supp_review.jpeg', width = 6, height = 5, units = 'in', res = 
 review_fig
 dev.off()
 #---------------------------------------------
-
-# dispersal limitation
-review_dl_dat
-
-
-
-
-#-------------------------------
-
-# per misalignment
-# had to remove some random effects because of singular fit
-
-mr2 <- lmer(seed ~ ab_cat*species + (1|site), data = temp_dat)
-mr3 <- lmer(seed ~ poly(ab_cat,2, raw = TRUE)*species + (1|site), data = temp_dat)
-AIC(mdd2,mdd3)
-# df      AIC
-# mdd2 18 8726.206
-# mdd3 14 8742.462
-
-# linear fit is better.
-
-summary(mdd2)
-a <- Anova(mdd2, type = 3)
-# Analysis of Deviance Table (Type III Wald chisquare tests)
-# 
-# Response: seed
-# Chisq Df Pr(>Chisq)    
-# (Intercept)     2.9038  1    0.08837 .  
-# ab_cat          2.7186  3    0.43707    # NOT SIGNIFICANT!
-# species        21.6843  3  7.588e-05 ***
-# ab_cat:species  8.2028  9    0.51385  
-
-
-############# 
-## STATS ##
-#############
-
-# compare category 0 to 4
-temp_dat1 <- filter(temp_dat, ab_cat%in%'0' | ab_cat%in%'3')
-
-
-vis_dd <- ggpredict(mdd2, 
-                    terms = c("ab_cat[all]", "species"), 
-                    type = "fe"); plot(vis_dd)
-
-vis_dd$x <- case_match(vis_dd$x, 
-                       "0" ~ "0",
-                       "1" ~ "1-10",
-                       "2" ~ "11-100",
-                       "3" ~ ">101")
-vis_dd$x <- factor(vis_dd$x, levels = c("0", "1-10", "11-100", ">101"))
-
-################
-# FIGURE
-################
-library(viridis)
-
-length(vis_dd$x)
-colortreatpred <- c(rep(c("tan4","maroon4", "turquoise1","forestgreen"), times = 4))
-dodge <- position_dodge(width = 0.5)
-dd2 <- ggplot() +
-  # geom_jitter(temp_dat, mapping = aes(x = ab_cat, y = seed, color = species),alpha = 0.1, height = 0.1) +
-  # scale_color_manual(values =c("tan4","maroon4","turquoise1","forestgreen"),
-  #                    labels = c("Bromus","Plantago", "Micropus","Festuca")) + # up here so that it only deals with this layer
-  geom_point(data = vis_dd, aes(x = x, y = predicted, group = group, color = group), 
-             size = 4,
-             position = dodge
-  ) +
-  geom_line(data = vis_dd, aes(x = x, y = predicted, group = group, color = group), position = dodge) +
-  geom_linerange(data = vis_dd, aes(
-    x = x,
-    y = predicted,
-    group=group,
-    color = group,
-    ymin = conf.low,
-    ymax = conf.high),
-    show.legend = F,
-    linewidth = 1,
-    position = dodge
-  ) +
-  scale_color_viridis(option = "H", direction = 1, discrete = TRUE,
-                      labels = c("Bromus","Plantago", "Micropus","Festuca")) +
-  # scale_color_manual(values =c("tan4","maroon4","turquoise1","forestgreen"),
-  #                    labels = c("Bromus","Plantago", "Micropus","Festuca")) +
-  theme_bw() +
-  labs(x = "Number of individuals", y = "Seed produced per capita", color = "Species") +
-  # ylim(-2,5)+
-  theme(text = element_text(size = 16))
-dd2

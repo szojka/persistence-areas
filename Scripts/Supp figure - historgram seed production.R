@@ -57,9 +57,9 @@ fig_seed <- ggplot(seed_dat_germ, aes(x = seed, fill = treatment, color = treatm
   geom_vline(xintercept = 2, color = 'red')
 fig_seed
 
-jpeg('Figures/supp_fig_seedprod.jpeg', width = 8.5, height = 7, units = 'in', res = 600)
-fig_seed
-dev.off()
+# jpeg('Figures/supp_fig_seedprod.jpeg', width = 8.5, height = 7, units = 'in', res = 600)
+# fig_seed
+# dev.off()
 
 #######################
 # how much of the data do we cut off after 20 seeds?
@@ -99,7 +99,7 @@ fig_seed_zoomed <- ggplot(seed_dat_germ, aes(x = seed, fill = treatment, color =
   geom_histogram(alpha = 0.75, bins = 60) +
   scale_fill_manual(values = c( "mediumpurple1","honeydew4")) +
   scale_color_manual(values = c("mediumpurple1","honeydew4"), guide = FALSE) +
-  labs(fill = "", x = "Seed production of germinated tranplants", y = 'Count') +
+  labs(fill = "", x = "Seed production of germinated transplants", y = 'Count') +
   theme_bw() +
   facet_wrap(~species) +
   theme(legend.position = 'top',

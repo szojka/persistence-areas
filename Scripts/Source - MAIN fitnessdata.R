@@ -136,7 +136,7 @@ dat1 <- pivot_longer(dist.dat, cols = c(1:nrun), names_to = "run")
 names <- unique(nkey$names)
 dat1$names <- rep(names, each=nrun) # PROBLEM = MISSING PLOTS IN NKEY
 names(dat1)[2] <- c("area")
-dat <- left_join(dat1, uni_key, by = "names")
+dat <- left_join(dat1, uni_key, by = "names", relationship = "many-to-many")
 dat <- distinct(dat)
 
 # checking all is well with this dataset
