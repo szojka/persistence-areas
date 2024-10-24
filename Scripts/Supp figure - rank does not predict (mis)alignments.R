@@ -81,11 +81,11 @@ vis_mr1$group <- factor(vis_mr1$group, levels = c("Aligned present", "Sink","Dis
 library(viridis)
 
 review_fig <- ggplot(data = vis_mr1, mapping = aes(x = x, y = predicted, color = x)) +
-  geom_point(size = 3) + 
   geom_line(color = "lightgrey", aes(group = group)) +
+  geom_point(size = 3) + 
   geom_linerange(aes(y = predicted, ymin = conf.low, ymax = conf.high)) +
   facet_wrap(~group) +
-  labs(x = "Species by rank abundance", y = "Proportion of each (mis)alignment", color = "") +
+  labs(x = "Species by rank abundance (high to low)", y = "Proportion of each (mis)alignment", color = "") +
   scale_color_viridis(option = "H", direction = 1, discrete = TRUE,
                       labels = c("Bromus","Plantago", "Micropus","Festuca")) +
   theme_bw() +
