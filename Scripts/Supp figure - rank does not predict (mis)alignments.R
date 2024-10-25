@@ -4,7 +4,8 @@
 ##################################
 
 # DESCRIPTION:
-# Supplementary material to see how effectively we reduced the cover in cleared plots in comparison to the intact paired plot. Also to see how total % cover changed across the productivity gradient.
+# Supplemental material to see whether the rank abundance of focal species predicts 
+# the proportion of (mis)alignments for each species with neighbors
 
 # library(tidyverse)
 # library(stringr)

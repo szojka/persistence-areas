@@ -48,7 +48,13 @@ Using average annual temperature and precipitation data from the Western Regiona
 
 ## Supp figure - reduction in cover
 
-Comparing the percent vegetative cover between paired plots with neighbors, and plots without neighbors. Sscript corresponds to supplementary figure on total cover and cover reduced.
+Comparing the percent vegetative cover between paired plots with neighbors, and plots without neighbors. script corresponds to supplementary figure on total cover and cover reduced.
+
+## Supp figure - histogram seed production.R
+Transplant seed production for each species, in conditions with and without neighbors.
+
+## Supp figure - rank does not predict (mis)alignments.R
+Compares how well species by rank abundance predict the proportion of (mis)alignments for each species with neighbors.
 
 ## Stats - natural persistence v occurrence.R
 
@@ -142,7 +148,7 @@ Precipitation : in cm
 
 # SUPPORTING INFORMATION AND CONTACT:
 
-1. code DOI: 10.5281/zenodo.12645034
+1. code DOI: 10.5281/zenodo.12645033
 
 2. although not required, the authors would appreciate if you would notify author Megan Szojka mszojka@uwyo.edu if you are planning on using this data in a project for publication, as other projects are ongoing.
 

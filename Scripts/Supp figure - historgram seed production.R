@@ -1,11 +1,11 @@
-#----------------------------------------------
+
+##################################
 # RAW SEED PRODUCTION PER SPECIES
-#----------------------------------------------
+##################################
 
-
-###############################
-# Load packages and functions
-###############################
+# DESCRIPTION:
+# Supplemental material to show transplant seed production for each species,
+# in conditions with and without neighbors
 
 # library(readr)
 # library(tidyverse)
