@@ -543,7 +543,7 @@ Anova(m.p, type = 3)
 # type        888.0722  4    < 2e-16 ***
 
 v <- ggpredict(m.p, terms = c("type"), 
-               type = "fe", allow.new.levels=TRUE); plot(v)
+               type = "fe"); plot(v)
 
 # add pairwise comparison table
 em <- emmeans(m.p, ~type, type = "response") # specify green_index_scaled values
@@ -586,7 +586,7 @@ Anova(m.g, type = 3)
 #   type        82.552  2  < 2.2e-16 ***
 
 v <- ggpredict(m.g, terms = c("type"), 
-               type = "fe", allow.new.levels=TRUE); plot(v)
+               type = "fe"); plot(v)
 
 # add pairwise comparison table
 em <- emmeans(m.g, ~type, type = "response") # specify green_index_scaled values
@@ -627,7 +627,7 @@ Anova(m.s, type = 3)
 # type        16.064  4   0.002934 **
 
 v <- ggpredict(m.s, terms = c("type"), 
-               type = "fe", allow.new.levels=TRUE); plot(v) 
+               type = "fe"); plot(v) 
 # all those at 100 must have variances removed. Realized does not!
 
 # add pairwise comparison table
@@ -643,17 +643,17 @@ pairs(em)
 
 vis2p <- ggpredict(m.p, 
                    terms = c("type"), 
-                   type = "fe", allow.new.levels=TRUE)
+                   type = "fe")
 vis2p$group <- 'plot'
 
 vis2g <- ggpredict(m.g,
                    terms = c("type"), 
-                   type = "fe", allow.new.levels=TRUE)
+                   type = "fe")
 vis2g$group <- 'grid'
 
 vis2s <- ggpredict(m.s, 
                    terms = c("type"), 
-                   type = "fe", allow.new.levels=TRUE)
+                   type = "fe")
 vis2s$group <- 'site'
 # take confs to 1, as no error can really be estimated when all values are 1.
 vis2s$conf.low[vis2s$x %in% 'Diversity (SAR)'] <- 1 
@@ -716,7 +716,7 @@ tab_avg_PAR_estimates <- vis2 |>
   dplyr::select(type, scale, predicted, conf.int) |>
   gt() |>
   tab_header( title = "",
-    subtitle = "Table S12. Model estimates of persistence-area relationships (realized-PAR and potential-PAR) and species-area relationships (Diversity-SAR) using averaged scaling of suitable habitat. Separate models were fit for each scale.")  |>
+    subtitle = "")  |>
   opt_align_table_header(align = "left") |>
   cols_label(
     type = 'Data type',
@@ -729,8 +729,7 @@ tab_avg_PAR_estimates <- vis2 |>
   cols_align(
     align = 'left', 
     columns = where(is.factor))
-  #as_latex() # exports code but don't know how to work it right in latex
-  
+
  tab_avg_PAR_estimates |>
   gtsave(paste0(here::here(),"/Tables/12tab_avg_PAR_estimates.pdf")) 
 
@@ -754,7 +753,7 @@ tab_avg_PAR_estimates <- vis2 |>
    dplyr::select(scale, predictor, Chi.squared, Df, P_value) |>
    gt() |>
    tab_header( title = "",
-               subtitle = "Table S13. ANOVA outputs of predictor 'data type', (which includes persistence-area relationships (realized-PAR and potential-PAR) both with and without neighbors, and species-area relationships (Diversity-SAR)) using averaged scaling of suitable habitat. Separate models were fit for each scale.")  |>
+               subtitle = "")  |>
    opt_align_table_header(align = "left") |>
    cols_label(
      predictor = 'Predictor',
@@ -798,7 +797,7 @@ tab_avg_PAR_estimates <- vis2 |>
    dplyr::mutate(p.value = round(p.value,3)) |>
    gt() |>
    tab_header( title = "",
-               subtitle = "Table S14. Contrasts between each PAR and SAR from averaged method of scaling suitable habitat. Each scale was fit with a separate model.")  |>
+               subtitle = "")  |>
    opt_align_table_header(align = "left") |>
    cols_label(
      p.value = "P-value",
@@ -815,22 +814,3 @@ tab_avg_PAR_estimates <- vis2 |>
 tab_avgPAR_contrasts |>
   gtsave(paste0(here::here(),"/Tables/14tab_avg_PAR_contrasts.pdf")) 
  
- # EXTRA CODE THAT IS MORE ELEGANT THAN MULTISTEP ABOVE
- # tt <- sitelev %>% # this works for averaged way, delete
- #   dplyr::filter(treatment %in% 'B') %>%
- #   dplyr::arrange(site) %>%
- #   dplyr::group_by(site) %>%
- #   dplyr::mutate(replicates = n()) %>%
- #   dplyr::select(-contingency, -site_n, -site_seed) %>%
- #   dplyr::mutate(realized_site = ifelse(occurrence %in% 'yes' & persistence %in% 'yes', 1, 0)) %>%
- #   dplyr::mutate(potential_site = ifelse(persistence %in% 'yes', 1, 0)) %>%
- #   dplyr::mutate(occurrence = ifelse(occurrence %in% 'yes', 1, 0)) %>%
- #   dplyr::mutate(realized_site_sum = sum(realized_site)) %>% # add up all the species for each site
- #   dplyr::mutate(potential_site_sum = sum(potential_site)) %>% # add up all the species for each site
- #   dplyr::select(-species) %>%
- #   distinct() %>% # remove all the species level information, now at community level
- #   dplyr::mutate(realized_site_prop = realized_site_sum/replicates) %>%
- #   dplyr::mutate(potential_site_prop = potential_site_sum/replicates) %>%
- #   dplyr::select(site, treatment, occurrence, persistence, realized_site, realized_site_prop, potential_site, potential_site_prop, replicates) %>%
- #   print( n = 24)
- #   view(tt)

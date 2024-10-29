@@ -152,7 +152,7 @@ tab_mulinomial_estimates <- output1 |>
   dplyr::select(contingency, prob, conf.int) |>
   gt() |>
   tab_header( title = "",
-              subtitle = "Table S1. Estimated proportion from the multinomial model of each (mis)alignment in natural conditions (i.e., with neighbors) and at the plot scale. Roman numerals correspond to (mis)alignments in Figure 1.")  |>
+              subtitle = "")  |>
   opt_align_table_header(align = "left") |>
   cols_label(
     contingency = "(Mis)alignment",
@@ -171,7 +171,7 @@ tab_wald <- dat_compare |>
   dplyr::mutate(z_score = round(z_score,4)) |>
   gt() |>
   tab_header( title = "",
-              subtitle = "Table S2. Pairwise contrasts between each (mis)alignment levels at the plot scale in natural conditions (i.e. with neighbors). Contrasts are outputs from WALD tests on the multinomial model.")  |>
+              subtitle = "")  |>
   opt_align_table_header(align = "left") |>
   cols_label(
     p_val = "P-value",

@@ -707,7 +707,7 @@ tab_mulinomial_estimates <- output_ordered |>
   dplyr::select(species, contingency, prob, conf.int) |>
   gt() |>
   tab_header( title = "",
-              subtitle = "Table S15. Estimated proportion from the multinomial model of each (mis)alignment in natural conditions (i.e., with neighbors) and at the plot scale and for each species.")  |>
+              subtitle = "")  |>
   opt_align_table_header(align = "left") |>
   cols_label(
     species = "Species",

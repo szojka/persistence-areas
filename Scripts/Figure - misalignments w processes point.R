@@ -23,7 +23,7 @@
 
 source(paste0(here::here(),"/Scripts/Stats - misalignments by treatment at blocks.R"))
 source(paste0(here::here(),"/Scripts/Stats - misalignments by treatment at grids.R"))
-source(paste0(here::here(),"/Scripts/Stats - misalignments by treatment at sites.R"))
+source(paste0(here::here(),"/Scripts/Stats - misalignments by treatment at sites.R")) # warnings here are ok
 
 # new figure with scale on the x-axis, and proportion still on the y, facet by a and b
 
@@ -152,7 +152,7 @@ tab_neighbor_estimates <- output_all |>
   dplyr::select(contingency, scale, treatment, predicted, conf.int) |>
   gt() |>
   tab_header( title = "",
-              subtitle = "Table S6. Model estimates of the proportion of species that fell into each (mis)alignment category comparing with or without neighbors. Separate models were fit for each (mis)alignment category and scale.")  |>
+              subtitle = "")  |>
   opt_align_table_header(align = "left") |>
   cols_label(
     contingency = "(Mis)alignment",
@@ -200,7 +200,7 @@ tab_anovas <- anovas |>
   dplyr::select(scale, contingency, predictor, Chi.squared, Df, P_value) |>
   gt() |>
   tab_header( title = "",
-              subtitle = "Table S7. ANOVA outputs of predictor 'Data type', which represents the neighbor treatment predictor with two levels: with neighbors, without neighbors. Separate models were fit for each scale and (mis)alignment category. NAs indicate there were no instances in our data, thus comparisons are not possible.")  |>
+              subtitle = "")  |>
   opt_align_table_header(align = "left") |>
   cols_label(
     predictor = 'Predictor',
@@ -246,7 +246,7 @@ tab_contrasts <- contrastz |>
   dplyr::mutate(p.value = round(p.value,3)) |>
   gt() |>
   tab_header( title = "",
-              subtitle = "Table S8. Contrasts between 'without neighbors' and 'with neighbors' treatment levels within each scale and (mis)alignment category. NAs indicate there were no instances in our data, thus comparisons are not possible.")  |>
+              subtitle = "")  |>
   opt_align_table_header(align = "left") |>
   cols_label(
     z.ratio = "z-ratio",

@@ -35,7 +35,7 @@ tab_occ.v.per_estimates <- summary |>
   dplyr::select(scale, x, predicted, conf.int) |>
   gt() |>
   tab_header( title = "",
-              subtitle = "Table S3. Model estimates of the proportion of species that fell into each (mis)alignment category comparing with or without neighbors. Separate models were fit for each (mis)alignment category and scale.")  |>
+              subtitle = "")  |>
   opt_align_table_header(align = "left") |>
   cols_label(
     x = "Data type",
@@ -48,7 +48,6 @@ tab_occ.v.per_estimates <- summary |>
   cols_align(
     align = 'left', 
     columns = where(is.factor))
-#as_latex() # exports code but don't know how to work it right in latex
 
 tab_occ.v.per_estimates |>
   gtsave(paste0(here::here(),"/Tables/3tab_occ.v.per_estimates.pdf")) 
@@ -61,7 +60,7 @@ all_anovas <- all.anova |>
   dplyr::select(scale, predictor, Chi.squared, Df, P_value) |>
   gt() |>
   tab_header( title = "",
-              subtitle = "Table S4. ANOVA outputs of predictor 'data type' with three levels: occurrence, suitability with neighbors, and suitability without neighbors. Separate models were fit for each scale.")  |>
+              subtitle = "")  |>
   opt_align_table_header(align = "left") |>
   cols_label(
     predictor = 'Predictor',
@@ -92,7 +91,7 @@ tab_occ.v.per_contrasts <- contrastz |>
   dplyr::mutate(p.value = round(p.value,3)) |>
   gt() |>
   tab_header( title = "",
-              subtitle = "Table S5. Contrasts between the proportion of suitable habitat 'without neighbors' and 'with neighbors' and proportion of occurring species at each scale.")  |>
+              subtitle = "")  |>
   opt_align_table_header(align = "left") |>
   cols_label(
     p.value = "P-value",

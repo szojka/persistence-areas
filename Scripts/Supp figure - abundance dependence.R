@@ -140,12 +140,12 @@ tab_density_estimates <- vis_dd |>
   dplyr::select(group, x, predicted, conf.int) |>
   gt() |>
   tab_header( title = "",
-              subtitle = "Table S16. Model estimates of predicted seed production for each abundance category and for each species.")  |>
+              subtitle = "")  |>
   opt_align_table_header(align = "left") |>
   cols_label(
     group = 'Species',
     x = 'Abundance category',
-    predicted = 'Estimated proportion',
+    predicted = 'Estimate',
     conf.int = "95% CI") |>
   cols_align(
     align = 'right', 
@@ -153,7 +153,6 @@ tab_density_estimates <- vis_dd |>
   cols_align(
     align = 'left', 
     columns = where(is.factor))
-#as_latex() # exports code but don't know how to work it right in latex
 
 tab_density_estimates |>
   gtsave(paste0(here::here(),"/Tables/16tab_density_estimates.pdf")) 
@@ -173,7 +172,7 @@ all_anovas <- d.anova |>
   dplyr::select(predictor, Chi.squared, Df, P_value) |>
   gt() |>
   tab_header( title = "",
-              subtitle = "Table S17. ANOVA outputs of predictors main effects and interactions. Predictors included 'abundance categories' with four levels: 0 individuals, between 1 and 10 individuals, 11-100 individuals, and over 101 individuals, and predictor species with four levels: Plantago, Bromus, Micropus, Festuca.")  |>
+              subtitle = "")  |>
   opt_align_table_header(align = "left") |>
   cols_label(
     predictor = 'Predictor',
@@ -222,7 +221,7 @@ tab_density_contrasts <- d.contrast |>
   dplyr::mutate(p.value = round(p.value,3)) |>
   gt() |>
   tab_header( title = "",
-              subtitle = "Table S18. Contrasts between abundance categories for each species. Non significant comparisons suggest limited effects of density dependence on seed production (i.e., populations are below carrying capacity).")  |>
+              subtitle = "")  |>
   opt_align_table_header(align = "left") |>
   cols_label(
     p.value = "P-value",
