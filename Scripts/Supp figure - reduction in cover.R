@@ -91,7 +91,7 @@ fig_r <- ggplot(data = cover_reduction, aes(x = grid, y = reduction)) +
   ylim(0,100) +
   theme(text = element_text(size = 16),
         legend.position = 'top') +
-  annotate("text", x = 1, y = 99, label = "B", size = 6)
+  annotate("text", x = 1, y = 99, label = "B", size = 6, fontface = "bold")
 fig_r
 
 fig_c <- ggplot(data = cover_green_all, aes(x = grid, y = total, fill = treatment, color = treatment)) +
@@ -103,11 +103,16 @@ fig_c <- ggplot(data = cover_green_all, aes(x = grid, y = total, fill = treatmen
   scale_color_manual(values = c( "mediumpurple1","honeydew4"), guide = 'none') +
   theme(text = element_text(size = 16),
         legend.position = 'top')+
-  annotate("text", x = 1, y = 99, label = "A", size = 6)
+  annotate("text", x = 1, y = 99, label = "A", size = 6, fontface = "bold")
 fig_c
 
+##############################################################################
 library(patchwork)
-jpeg('Figures/fig_supp_cover.jpeg', width = 7, height = 9, units = 'in', res = 600)
+# jpeg('Figures/fig_supp_cover.jpeg', width = 7, height = 9, units = 'in', res = 600)
+# fig_c / fig_r
+# dev.off()
+
+pdf('Figures/fig_supp_cover.pdf', width = 7, height = 9)
 fig_c / fig_r
 dev.off()
-
+##############################################################################

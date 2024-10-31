@@ -94,6 +94,12 @@ dat_text <- data.frame(
 #   vjust   = -1
 # )
 
+# labels for each facet
+facet_labels <- data.frame(
+  species = c("Bromus", "Festuca", "Micropus", "Plantago"),
+  label = c("A", "B", "C", "D")  # Adjust labels as necessary
+)
+
 # zoomed in:
 fig_seed_zoomed <- ggplot(seed_dat_germ, aes(x = seed, fill = treatment, color = treatment)) +
   geom_histogram(alpha = 0.75, bins = 60) +
@@ -112,13 +118,21 @@ fig_seed_zoomed <- ggplot(seed_dat_germ, aes(x = seed, fill = treatment, color =
     mapping = aes(x = 13, y = 80, label = label)
     #hjust   = -0.1,
     #vjust   = -1
-  )
+  ) +
+  geom_text(data = facet_labels, aes(x = 1.5, y = Inf, label = label), 
+            hjust = 1.5, vjust = 1.5, size = 6, fontface = "bold", 
+            inherit.aes = FALSE)
 fig_seed_zoomed
 
-jpeg('Figures/supp_fig_seedprod_zoomed.jpeg', width = 7, height = 6, units = 'in', res = 600)
+#####################################################################
+# jpeg('Figures/supp_fig_seedprod_zoomed.jpeg', width = 7, height = 6, units = 'in', res = 600)
+# fig_seed_zoomed
+# dev.off()
+
+pdf('Figures/supp_fig_seedprod_zoomed.pdf', width = 7, height = 6)
 fig_seed_zoomed
 dev.off()
-
+#####################################################################
 
 #---------------------------------
 # supporting stats
@@ -158,3 +172,7 @@ seed_dat_germ %>%
   dplyr::mutate(mean_seed = mean(seed)) %>%
   dplyr::select(treatment, max_seed, mean_seed) %>%
   distinct()
+
+#   treatment         max_seed mean_seed
+#  1 with neighbors          52      3.68
+#  2 without neighbors       85     10.8 

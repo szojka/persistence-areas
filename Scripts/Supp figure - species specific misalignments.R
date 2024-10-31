@@ -193,7 +193,7 @@ contingency_cols1 <- c("slategrey", "#8c96c6" , "#88419d","violet" )
                                                           ymin = -Inf, ymax = Inf, geom = 'rect', alpha = 0.2) +
     annotate(xmin = which(man_list=="SS_n")-0.5, xmax = which(man_list=="SS_n")+0.5,
              ymin = -Inf, ymax = Inf, geom = 'rect', alpha = 0.2) +
-    annotate("text", x = 0.5, y = 0.99, label = "A", size = 6)
+    annotate("text", x = 0.5, y = 0.99, label = "A", size = 6, fontface = "bold")
   
   p
   
@@ -348,7 +348,7 @@ contingency_cols1 <- c("slategrey", "#8c96c6" , "#88419d","violet" )
              ymin = -Inf, ymax = Inf, geom = 'rect', alpha = 0.2) +
     annotate(xmin = which(man_list=="SS_n")-0.5, xmax = which(man_list=="SS_n")+0.5,
              ymin = -Inf, ymax = Inf, geom = 'rect', alpha = 0.2) +
-    annotate("text", x = 0.5, y = 0.99, label = "B", size = 6)
+    annotate("text", x = 0.5, y = 0.99, label = "B", size = 6, fontface = "bold")
   
   m
   
@@ -505,7 +505,7 @@ fig1Br_dat <- arrange(fig1Br_dat, match(fig1Br_dat$contingency, levels(fig1Br_da
              ymin = -Inf, ymax = Inf, geom = 'rect', alpha = 0.2) +
     annotate(xmin = which(man_list=="SS_n")-0.5, xmax = which(man_list=="SS_n")+0.5,
              ymin = -Inf, ymax = Inf, geom = 'rect', alpha = 0.2) +
-    annotate("text", x = 0.5, y = 0.99, label = "C", size = 6)
+    annotate("text", x = 0.5, y = 0.99, label = "C", size = 6, fontface = "bold")
   
   b
   
@@ -661,13 +661,17 @@ fig1Br_dat <- arrange(fig1Br_dat, match(fig1Br_dat$contingency, levels(fig1Br_da
              ymin = -Inf, ymax = Inf, geom = 'rect', alpha = 0.2) +
     annotate(xmin = which(man_list=="SS_n")-0.5, xmax = which(man_list=="SS_n")+0.5,
              ymin = -Inf, ymax = Inf, geom = 'rect', alpha = 0.2) +
-    annotate("text", x = 0.5, y = 0.99, label = "D", size = 6)
+    annotate("text", x = 0.5, y = 0.99, label = "D", size = 6, fontface = "bold")
 v
 }
 
 ##########################################################
 library(patchwork)
-jpeg('Figures/fig_supp_species.jpeg', width = 9, height = 9, units = 'in', res = 300)
+# jpeg('Figures/fig_supp_species.jpeg', width = 9, height = 9, units = 'in', res = 300)
+# (p + m) / (b + v)
+# dev.off()
+
+pdf('Figures/fig_supp_species.pdf', width = 9, height = 9)
 (p + m) / (b + v)
 dev.off()
 ##########################################################

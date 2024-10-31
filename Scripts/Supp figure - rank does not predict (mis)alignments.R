@@ -81,6 +81,11 @@ vis_mr1$group <- factor(vis_mr1$group, levels = c("Aligned present", "Sink","Dis
 
 library(viridis)
 
+facet_labels <- data.frame(
+  group = unique(vis_mr1$group),
+  label = c("A", "B", "C", "D")  # Adjust labels as necessary
+)
+
 review_fig <- ggplot(data = vis_mr1, mapping = aes(x = x, y = predicted, color = x)) +
   geom_line(color = "lightgrey", aes(group = group)) +
   geom_point(size = 3) + 
@@ -92,10 +97,18 @@ review_fig <- ggplot(data = vis_mr1, mapping = aes(x = x, y = predicted, color =
   theme_bw() +
   theme(legend.position = 'none',
         axis.text.x = element_text(angle = 45, hjust = 1),
-        text = element_text(size = 16))
+        text = element_text(size = 16)) +
+  geom_text(data = facet_labels, aes(x = 1, y = Inf, label = label), 
+            hjust = 1.5, vjust = 1.5, size = 6, fontface = "bold", 
+            inherit.aes = FALSE)
+review_fig
 
-#---------------------------------------------
-jpeg('Figures/fig_supp_review.jpeg', width = 6, height = 5, units = 'in', res = 600)
+###################################################################
+# jpeg('Figures/fig_supp_review.jpeg', width = 6, height = 5, units = 'in', res = 600)
+# review_fig
+# dev.off()
+
+pdf('Figures/fig_supp_review.pdf', width = 6, height = 5)
 review_fig
 dev.off()
-#---------------------------------------------
+###################################################################

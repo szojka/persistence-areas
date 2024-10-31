@@ -16,7 +16,7 @@ fig_temp <- ggplot(clim_dat, aes(x = Year, y = Temperature, group = 1)) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1), 
   text = element_text(size = 16)) +
   ylim(10,20) +
-  annotate("text", x = 1, y = 20, label = "A", size = 6) +
+  annotate("text", x = 1, y = 20, label = "A", size = 6, fontface = "bold") +
   scale_x_discrete(breaks = clim_dat$Year[seq(1, length(clim_dat$Year), by = 3)])
 fig_temp
 
@@ -28,14 +28,18 @@ fig_precip <- ggplot(clim_dat, aes(x = Year, y = Precipitation, group = 1)) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1),
         text = element_text(size = 16)) +
   ylim(0,180) + 
-  annotate("text", x = 1, y = 180, label = "B", size = 6) +
+  annotate("text", x = 1, y = 180, label = "B", size = 6, fontface = "bold") +
   scale_x_discrete(breaks = clim_dat$Year[seq(1, length(clim_dat$Year), by = 3)])
 fig_precip
 
 library(patchwork)
 
 ###################################################################################
-jpeg('Figures/fig_supp_enviro.jpeg', width = 10, height = 5, units = 'in', res = 600)
+# jpeg('Figures/fig_supp_enviro.jpeg', width = 10, height = 5, units = 'in', res = 600)
+# fig_temp + fig_precip
+# dev.off()
+
+pdf('Figures/fig_supp_enviro.pdf', width = 10, height = 5)
 fig_temp + fig_precip
 dev.off()
 ####################################################################################

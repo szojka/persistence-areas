@@ -116,7 +116,11 @@ dd2 <- ggplot() +
 dd2
 
 ###################################################################################
-jpeg('Figures/fig_supp_dd_factor.jpeg', width = 6, height = 5, units = 'in', res = 600)
+# jpeg('Figures/fig_supp_dd_factor.jpeg', width = 6, height = 5, units = 'in', res = 600)
+# dd2
+# dev.off()
+
+pdf('Figures/fig_supp_dd_factor.pdf', width = 6, height = 5)
 dd2
 dev.off()
 ####################################################################################
