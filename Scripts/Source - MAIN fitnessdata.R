@@ -266,6 +266,10 @@ names(plotlev)[11] <- "occurrence"
 plotlev$occurrence[plotlev$occurrence > 0] <- c("yes")
 plotlev$occurrence[plotlev$occurrence == 0] <- c("no")
 
+######################################################
+# This changes depending on how we decide persistence:
+######################################################
+
 plotlev$persistence <- NA
 plotlev$persistence[plotlev$seed >= 2] <- c("yes")
 plotlev$persistence[plotlev$seed < 2] <- c("no")
